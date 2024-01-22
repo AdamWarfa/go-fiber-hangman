@@ -60,6 +60,7 @@ func SaveUser(c *fiber.Ctx) error {
 		return c.Status(http.StatusInternalServerError).JSON(fiber.Map{"error": "Failed to save user"})
 
 	}
+	fmt.Printf("User %s saved in DB", user.Email)
 
 	return c.Status(http.StatusOK).JSON(fiber.Map{"user": user})
 }
