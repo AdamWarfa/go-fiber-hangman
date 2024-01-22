@@ -1,0 +1,27 @@
+version: "3.8"
+
+services:
+  db:
+    image: postgres:latest
+    container_name: db
+    env_file:
+      - ./.env  # Specify the path to your env file
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U $POSTGRES_USER -d $POSTGRES_DB"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    volumes:
+      - db_data:/var/lib/postgresql/data
+    networks:
+      - hangman-net
+    restart: unless-stopped
+    ports:
+      - "5432:5432"
+
+networks:
+  hangman-net:
+    driver: bridge
+
+volumes:
+  db_data:
