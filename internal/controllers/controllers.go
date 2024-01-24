@@ -58,8 +58,8 @@ func SaveUser(c *fiber.Ctx) error {
 
 	if result.Error != nil {
 		return c.Status(http.StatusInternalServerError).JSON(fiber.Map{"error": "Failed to save user"})
-
 	}
+
 	fmt.Printf("User %s saved in DB", user.Email)
 
 	return c.Status(http.StatusOK).JSON(fiber.Map{"user": user})
@@ -82,7 +82,11 @@ func UpdateUser(c *fiber.Ctx) error {
 
 	user := models.User{Id: body.Id, Email: body.Email, Streak: body.Streak, HiScore: body.HiScore}
 
-	initializers.DB.Model(&user).Where("id = ?", id).Updates(&user)
+	result := initializers.DB.Model(&user).Where("id = ?", id).Updates(&user)
+
+	if result.Error != nil {
+		return c.Status(http.StatusInternalServerError).JSON(fiber.Map{"error": "Failed to update user"})
+	}
 
 	return c.Status(http.StatusOK).JSON(fiber.Map{"user": user})
 }
